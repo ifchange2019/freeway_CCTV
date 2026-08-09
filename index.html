@@ -167,39 +167,33 @@
       text-decoration: none;
     }
 
-    /* RWD：手機改為上下堆疊 */
+    /* 手機仍強制雙排顯示，只縮小間距與字體 */
     @media (max-width: 768px) {
       body {
-        padding: 10px;
-      }
-
-      .pair {
-        grid-template-columns: 1fr;
-      }
-
-      .cam {
-        border-right: none;
-        border-bottom: 1px solid var(--border);
-      }
-
-      .cam:last-child {
-        border-bottom: none;
+        padding: 8px;
       }
 
       .row-title {
-        font-size: 1rem;
+        font-size: 0.95rem;
+        padding: 8px 12px;
+      }
+
+      .cam-label {
+        font-size: 0.75rem;
+        padding: 6px 8px;
       }
     }
 
     @media (max-width: 480px) {
       header h1 {
-        font-size: 1.15rem;
+        font-size: 1.1rem;
       }
 
-      .cam-label {
-        font-size: 0.8rem;
+      .cam-label span.badge {
+        font-size: 0.65rem;
       }
     }
+
   </style>
 </head>
 <body>
