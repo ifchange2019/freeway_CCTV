@@ -318,32 +318,63 @@
   </footer>
 
   <script>
-    // 自動重連設定（毫秒）
+    // 自動重連設定
     const RECONNECT_INTERVAL = 6000; // 6 秒
-
+    const MAX_RECONNECT = 5;           // 最多自動重連 5 次
+  
     document.querySelectorAll('.cam-frame img').forEach(img => {
-      // 記住原始網址（去掉可能已有的時間戳）
+  
+      // 記住原始網址
       const baseSrc = img.src.split('&_t=')[0].split('?_t=')[0];
-
+  
+      // 重連次數
+      let reconnectCount = 0;
+  
       // 載入成功時隱藏 placeholder
       img.addEventListener('load', () => {
         const ph = img.parentElement.querySelector('.placeholder');
-        if (ph) ph.style.display = 'none';
+  
+        if (ph) {
+          ph.style.display = 'none';
+        }
       });
-
+  
       // 載入失敗時顯示提示
       img.addEventListener('error', () => {
         const ph = img.parentElement.querySelector('.placeholder');
+  
         if (ph) {
           ph.style.display = 'flex';
           ph.textContent = '重新連線中…';
         }
       });
-
-      // 定期強制重新載入影像（加上時間戳避免快取）
-      setInterval(() => {
-        img.src = baseSrc + (baseSrc.includes('?') ? '&' : '?') + '_t=' + Date.now();
+  
+      // 定期重新載入影像
+      const timer = setInterval(() => {
+  
+        // 已達最大次數，停止自動更新
+        if (reconnectCount >= MAX_RECONNECT) {
+          clearInterval(timer);
+  
+          const ph = img.parentElement.querySelector('.placeholder');
+  
+          if (ph) {
+            ph.style.display = 'flex';
+            ph.textContent = '已停止自動更新';
+          }
+  
+          return;
+        }
+  
+        reconnectCount++;
+  
+        // 加上時間戳避免快取
+        img.src = baseSrc +
+          (baseSrc.includes('?') ? '&' : '?') +
+          '_t=' + Date.now();
+  
       }, RECONNECT_INTERVAL);
+  
     });
   </script>
 </body>
